@@ -5,8 +5,6 @@ interface AuthState {
   token: string | null;
   username: string | null;
   isLoggedIn: boolean;
-  isLoading: boolean;
-  error: string | null;
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
   checkToken: () => void;
@@ -19,35 +17,18 @@ export const useAuthStore = create<AuthState>()(
         token: null,
         username: null,
         isLoggedIn: false,
-        isLoading: false,
-        error: null,
 
         login: async (username: string, password: string) => {
-          set({ isLoading: true, error: null });
+          if (username === 'admin' && password === '1234') {
+            const fakeToken = 'fake-jwt-token.mock.payload';
 
-          try {
-            await new Promise((res) => setTimeout(res, 500)); // mock delay
-
-            if (username === 'admin' && password === '1234') {
-              const fakeToken = 'fake-jwt-token.mock.payload';
-              set({
-                token: fakeToken,
-                username,
-                isLoggedIn: true,
-                isLoading: false,
-                error: null,
-              });
-            } else {
-              set({
-                error: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง',
-                isLoading: false,
-              });
-            }
-          } catch (err) {
             set({
-              error: 'เกิดข้อผิดพลาดในการเชื่อมต่อ',
-              isLoading: false,
+              token: fakeToken,
+              username,
+              isLoggedIn: true,
             });
+          } else {
+            throw new Error('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
           }
         },
 
@@ -56,8 +37,6 @@ export const useAuthStore = create<AuthState>()(
             token: null,
             username: null,
             isLoggedIn: false,
-            isLoading: false,
-            error: null,
           });
         },
 
@@ -65,20 +44,21 @@ export const useAuthStore = create<AuthState>()(
           const token = get().token;
           if (token) {
             try {
+              // Mock decode JWT
               const payload = token.split('.')[1];
               if (payload) {
                 set({ isLoggedIn: true });
               } else {
                 set({ token: null, isLoggedIn: false });
               }
-            } catch {
+            } catch (err) {
               set({ token: null, isLoggedIn: false });
             }
           }
         },
       }),
       {
-        name: 'auth-storage',
+        name: 'auth-storage', // ชื่อ key ใน localStorage
       }
     )
   )
