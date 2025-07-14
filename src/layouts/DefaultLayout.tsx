@@ -10,7 +10,7 @@ export default function DefaultLayout({ children }: Props) {
   return (
     <div>
       <header style={{ background: '#ddd', padding: 10 }}>
-        <Link to="/">Home</Link> | <Link to="/about">About</Link> | <Link to="/dashboard">Dashboard</Link>
+        <Link to="/">Home</Link> | <Link to="/about">About</Link> | <Link to="/dashboard">Dashboard</Link>  | <Link to="/logout">Log Out</Link>
       </header>
       <main>{children}</main>
     </div>
