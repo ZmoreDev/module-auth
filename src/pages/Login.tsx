@@ -4,22 +4,23 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 
 export default function Login() {
-  const { login } = useAuth();
+  const { login, error, setError } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    try {
-      await login(username, password);
+    setError(null);
+    const success = await login(username, password);
+    if (success) {
       navigate('/dashboard');
-    } catch (err) {
+    } else {
       setError('Invalid username or password');
     }
   };
+
+
 
   return (
     <form onSubmit={handleSubmit}>
