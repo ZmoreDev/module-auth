@@ -4,7 +4,7 @@ username: admin
 password: 1234
 
 - frontend react ts
-- - ProtectedRoute
+-   ProtectedRoute
 - backend nodejs
 
 - use JWT
